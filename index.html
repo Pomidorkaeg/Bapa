@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FC Tournaments Hub</title>
+    <meta name="description" content="Футбольный клуб - турниры и соревнования" />
+    <meta name="author" content="Lovable" />
+    <meta property="og:image" content="/og-image.png" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <!-- Инлайн CSS для быстрой загрузки основных стилей -->
+    <style>
+      /* Базовые стили, чтобы страница не выглядела пустой при загрузке */
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        color: #333333;
+      }
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(0, 128, 0, 0.2);
+        border-radius: 50%;
+        border-top-color: #008000;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root">
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    
+    <!-- Инлайн скрипт для проверки наличия основных скриптов -->
+    <script>
+      // Проверяем, запущен ли файл локально
+      const isLocalFile = window.location.protocol === 'file:';
+      
+      if (isLocalFile) {
+        // Если запущен локально, загружаем CDN версии React и необходимых библиотек
+        const dependencies = [
+          "https://unpkg.com/react@18/umd/react.production.min.js",
+          "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js",
+          "https://unpkg.com/react-router-dom@6/dist/umd/react-router-dom.production.min.js",
+          "https://unpkg.com/@tanstack/react-query@5/build/umd/index.production.js",
+          "/dist/assets/index.js" // Путь к собранному JS файлу вашего приложения
+        ];
+        
+        // Функция для загрузки скриптов последовательно
+        const loadScripts = (scripts, index = 0) => {
+          if (index < scripts.length) {
+            const script = document.createElement('script');
+            script.src = scripts[index];
+            script.onload = () => loadScripts(scripts, index + 1);
+            script.onerror = (e) => {
+              console.error(`Ошибка загрузки скрипта: ${scripts[index]}`, e);
+              const root = document.getElementById('root');
+              if (root) {
+                root.innerHTML = `
+                  <div style="padding: 20px; text-align: center;">
+                    <h2>Ошибка загрузки скриптов</h2>
+                    <p>Пожалуйста, запустите приложение через сервер разработки:</p>
+                    <pre>npm run dev</pre>
+                    <p>или используйте собранную версию через сервер.</p>
+                  </div>
+                `;
+              }
+            };
+            document.body.appendChild(script);
+          }
+        };
+        
+        // Загружаем CSS файл
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/dist/assets/index.css';
+        document.head.appendChild(link);
+        
+        // Начинаем загрузку скриптов
+        loadScripts(dependencies);
+      } else {
+        // Если запущен через сервер, используем стандартный подход Vite
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = '/src/main.tsx';
+        document.body.appendChild(script);
+      }
+    </script>
+  </body>
+</html>
